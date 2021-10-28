@@ -1,0 +1,109 @@
+\documentclass[11pt, twocolumn]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{multicol}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\title{DiD II}
+\author{Gustavo A. Castillo Alvarez}
+\date{Octubre 28, 2021}
+
+\begin{document}
+\maketitle	
+
+% Optional TOC
+% \tableofcontents
+% \pagebreak
+
+%--Paper--
+
+\section{Section 1}
+\subsection{Forma funcional}
+El supuesto de \textbf{tendencias paralelas} es muy sensible a la forma funcional de la variable dependiente
+Una transformacion puede cambiar todo: e.g. tener var. indep. como empleo, o log(empleo)
+\begin{itemize}
+    \item  El caso de \textit{empleo} estamos hablando en cambios absolutos
+    \item El caso de \textit{log(empleo)} estamos hablando en cambios porcentuales
+\end{itemize}
+¿Por qué hay que tener mucho cuidado con las transformaciones en las variables en DiD?
+
+
+\section{Diferencias en Diferencias en Diferencias (DDD)}
+Si no se me cumple el supuesto de \textbf{tendencias paralelas} podría solucionar el problema con una 3ra diferencia.
+e.g. Muralidharan and Prakash (2017): ¿Cómo diseñamos la identificación de este problema? La manera más sencilla sería utilizar el grupo de hombres que no recibieron la bicicleta como mi grupo de control, y así usando DiD puedo comparar cohortes de mujeres antes y después del tratamiento usando hombres como grupo de control.
+
+\textbf{Problema:} Las tasas de cobertura de hombres y mujeres NO siguen la misma tendencia, probablemente NO hay tendencias paralelas: la tasa de cobertura de las mujeres a través del tiempo \textit{ha ido creciendo} a través del tiempo, NO se ha movido de manera paralela con la tasa de cobertura de los hombres.
+
+\textbf{Solución:} La \textit{brecha} o las diferencias \textit{en la tendencia} sean iguales (parelelas) en otros estados.
+Es posible que haya \textbf{tendencias paralelas} \textit{entre estados} en la \textbf{brecha} de cobertura en ausencia del tratamiento.
+\[
+DDD=DiD_{Bihar}-DiD_{Jharkhand}
+\]
+
+
+\section{Estudios de Evento}
+Debemos utilizarlos cuando las unidades reciben el tratamiento den \textit{diferentes} momentos del tiempo. \textbf{Suponemos} que el evento corresponde a un \textbf{absorving state}.
+
+Intuición: ¿Por qué no simplemente utiliar TWFE y permitir que la variable que determina el tratamiento $D_{it}$ se active en distintos momentos del tiempo?
+
+Excepción es cuando tenemos \textbf{efectos constantes} y homogéneos (entre unidades y el tiempo), pues se cumple tendencias paralelas y podemos estimar la ecuación y el estimador $\tau$ por MCO sí captura el ATT.
+
+Problema cuando tenemos presencia de: 
+\begin{enumerate}
+    \item Efectos heterogéneos
+    \item Efectos dinámicos
+\end{enumerate}
+
+Si las unidades están recibiendo el tratmiento en distintos instantes del tiempo, temprano (k) y tarde (l) el problema radica en lo que $\tau$ está capturando, puesto que tenido estos "3 grupos" de untreated (u), early treated (k) and late trated (l) pueden crear 4 diferentes escenarios de DiD de 2x2 entre ellos:
+Epa
+\begin{multicols}{2}
+\begin{itemize}
+\item early vs untreated
+\item late vs untreated
+\item early vs late in $t_0$ 
+\item late vs early in $t_1$
+\end{itemize}
+%\columnbreak
+\end{multicols}
+
+Los pesos son una función del \textbf{tamaño} de cada grupo y del \textbf{tiempo de exposición} al tratamiento. Así surgen dos problemas:
+\begin{enumerate}
+ \item Efectos heterogéneos: La distribución temporal del tratamiento afecta el resultado, es decir, los early están expuestos más al tratamiento que los late. 
+ \item Efectos dinámicos: Algunos pesos pueden ser \textit{negativos}, por el 4to escenario de late vs early in $t_1$ puesto que se está usando un grupo \textit{tratado} en período post como un grupo de control. 
+
+ \end{enumerate}
+
+Esto es un problema de estimación, no un problema de la lógica de la identificación.
+\subsection{Alternativas de Solución}
+Utilizar 3 diferentes estimadores que buscan garantizar que los grupos de control que utilizaremos son los 
+\begin{itemize}
+    \item Callaway and Sant'Anna (2021): Solo escoger las grupos (e.g. los 2x2) que me interesan estimandolos de forma no-paramétrica, y luego incorporándolos "adecuadamente" (unos pesos bien comportados)
+    \item Abraham and Sun (2021): 
+    \item de Chaisemartin and D'Haultfoeuille (2021): No 
+        
+\end{itemize}
+
+\subsection{Ejemplo Kleven et al. (2019)}
+Busca estudiar el \textit{por qué} diferencias en aspectos laborales (ingresos, participación y horas trabajadas) entre hombres y mujeres y explicándolo con el efecto de tener hijos $T$ sobre la carrera de las mujeres.
+
+Evento: momento (relativo) del nacimiento del primer hijo ($t=0$ es año en que nace el primer hijo)
+Control: Hombres
+Tratamiento: Mujeres
+
+El efecto que se desa estimar es entonces
+\[
+    P_t=\frac{\tau^m-\tau^w}{E()}
+.\] 
+
+\end{document}
+
